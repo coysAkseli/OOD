@@ -34,4 +34,8 @@ public class Album {
     public String getName() {
         return name;
     }
+
+    public ArrayList<File> getSoundClips() {
+        return soundClips;
+    }
 }
