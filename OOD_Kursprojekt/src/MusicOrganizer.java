@@ -1,3 +1,5 @@
+import java.io.File;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 import java.util.ArrayList;
 
@@ -5,33 +7,48 @@ import java.util.ArrayList;
 public class MusicOrganizer {
 
     private Album rootAlbum;
-    private HashMap<Album, ArrayList<Album>> albumHierarchy;
+    private HashMap<Album, ArrayList<Album>> albumHierarchyAlbums;
+    private HashMap<Album, ArrayList<File>> albumHierarchySoundClips;
 
     public MusicOrganizer() {
         this.rootAlbum = new Album("All Sound Clips");
-        this.albumHierarchy = new HashMap<>();
+        this.albumHierarchyAlbums = new HashMap<>();
+        this.albumHierarchySoundClips = new HashMap<>();
     }
+
+    // creates a new sub album to the album parentAlbum
 
     public void createNewSubAlbum(String albumName, Album parentAlbum) {
         Album newAlbum = new Album(albumName, parentAlbum);
-        ArrayList<Album> subAlbums = albumHierarchy.getOrDefault(parentAlbum, new ArrayList<>());
-        subAlbums.add(newAlbum);
-        albumHierarchy.put(parentAlbum, subAlbums);
+        albumHierarchyAlbums.put(parentAlbum, new ArrayList<Album>());
+        albumHierarchySoundClips.put(parentAlbum, new ArrayList<File>());
     }
 
-    public void deleteSubAlbum(Album subAlbum) {
-        Album parentAlbum = subAlbum.getParentAlbum();
-        if (parentAlbum != null) {
-            ArrayList<Album> subAlbums = albumHierarchy.get(parentAlbum);
-            if (subAlbums != null) {
-                subAlbums.remove(subAlbum);
-            }
+    // deletes the subalbum key and thus it's value arraylist and the reference to the
+    // arraylist to the subalbum from the parent album
+    public void deleteSubAlbum(Album subAlbum, Album parentAlbum) {
+        albumHierarchyAlbums.remove(subAlbum);
+        albumHierarchyAlbums.get(parentAlbum).remove(parentAlbum);
+    }
+
+    // sound clip is added to album and every album in the hierarchy up until root album
+    public void addSoundClip(File file, Album parentAlbum) {
+
+        // this while loop adds the file to every album in the hierarchy
+        while (notAtRootAlbum(parentAlbum)) {
+            albumHierarchySoundClips.get(parentAlbum).add(file);
+            parentAlbum = parentAlbum.getParentAlbum();
         }
     }
 
-    public void addSoundClip(String fileName) {
+    public void deleteSoundClip(File file, Album parentAlbum) {
+
+        while (notAtRootAlbum(parentAlbum)) {
+            albumHierarchySoundClips.get(parentAlbum).remove(file);
+        }
     }
 
-    public void deleteSoundClip(String fileName) {
+    public boolean notAtRootAlbum(Album parentAlbum) {
+        return parentAlbum.getParentAlbum() != null;
     }
 }

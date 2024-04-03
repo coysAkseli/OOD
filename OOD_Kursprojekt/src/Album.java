@@ -13,6 +13,7 @@ public class Album {
         this.name = albumName;
         this.subAlbums = new ArrayList<>();
         this.soundClips = new ArrayList<>();
+        this.parentAlbum = null;
     }
 
     public Album(String albumName, Album parentAlbum) {
