@@ -1,13 +1,26 @@
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Album {
 
     private String name;
     private Album parentAlbum;
+    private ArrayList<Album> subAlbums;
+    private ArrayList<File> soundClips;
 
-    ArrayList<File> soundClips = new ArrayList<>();
-    ArrayList<Album> subAlbums = new ArrayList<>();
+    public Album(String albumName) {
+        this.name = albumName;
+        this.subAlbums = new ArrayList<>();
+        this.soundClips = new ArrayList<>();
+    }
+
+    public Album(String albumName, Album parentAlbum) {
+        this.name = albumName;
+        this.parentAlbum = parentAlbum;
+        this.subAlbums = new ArrayList<>();
+        this.soundClips = new ArrayList<>();
+    }
 
     public ArrayList<Album> getSubAlbums() {
         return subAlbums;
@@ -17,8 +30,7 @@ public class Album {
         return parentAlbum;
     }
 
-    public Album(String albumName) {
-        this.name = albumName;
-
+    public String getName() {
+        return name;
     }
 }

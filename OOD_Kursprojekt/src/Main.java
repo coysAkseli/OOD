@@ -1,5 +1,9 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+
+        MusicOrganizer musicOrganizer = new MusicOrganizer();
+
+        // The root album is created statically
+        musicOrganizer.createNewSubAlbum("Music", Album.getRootAlbum());
     }
 }
