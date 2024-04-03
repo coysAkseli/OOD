@@ -20,15 +20,16 @@ public class MusicOrganizer {
 
     public void createNewSubAlbum(String albumName, Album parentAlbum) {
         Album newAlbum = new Album(albumName, parentAlbum);
-        albumHierarchyAlbums.put(parentAlbum, new ArrayList<Album>());
-        albumHierarchySoundClips.put(parentAlbum, new ArrayList<File>());
+        albumHierarchyAlbums.put(parentAlbum, newAlbum.getSubAlbums());
+        parentAlbum.getSubAlbums().add(newAlbum);
+        albumHierarchySoundClips.put(parentAlbum, newAlbum.getSoundClips());
     }
 
     // deletes the subalbum key and thus it's value arraylist and the reference to the
     // arraylist to the subalbum from the parent album
     public void deleteSubAlbum(Album subAlbum, Album parentAlbum) {
         albumHierarchyAlbums.remove(subAlbum);
-        albumHierarchyAlbums.get(parentAlbum).remove(parentAlbum);
+        parentAlbum.getSubAlbums().remove(subAlbum);
     }
 
     // sound clip is added to album and every album in the hierarchy up until root album
@@ -36,19 +37,24 @@ public class MusicOrganizer {
 
         // this while loop adds the file to every album in the hierarchy
         while (notAtRootAlbum(parentAlbum)) {
-            albumHierarchySoundClips.get(parentAlbum).add(file);
+            parentAlbum.getSoundClips().add(file);
             parentAlbum = parentAlbum.getParentAlbum();
         }
     }
 
-    public void deleteSoundClip(File file, Album parentAlbum) {
+    //needs to delete sound clip from sub albums as well
+    public void deleteSoundClip(File file, Album album) {
+        albumHierarchySoundClips.get(album).remove(file);
 
-        while (notAtRootAlbum(parentAlbum)) {
-            albumHierarchySoundClips.get(parentAlbum).remove(file);
+        for (Album x : albumHierarchyAlbums.keySet()) {
+            if (albumHierarchySoundClips.get(x).contains(file)) {
+                deleteSoundClip(file, x);
+            }
         }
     }
 
-    public boolean notAtRootAlbum(Album parentAlbum) {
-        return parentAlbum.getParentAlbum() != null;
+    // used when adding and removing sound clips
+    public boolean notAtRootAlbum(Album album) {
+        return album.getParentAlbum() != null;
     }
 }
