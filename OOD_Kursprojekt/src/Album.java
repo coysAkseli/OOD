@@ -1,5 +1,4 @@
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Album {
@@ -9,6 +8,7 @@ public class Album {
     private ArrayList<Album> subAlbums;
     private ArrayList<File> soundClips;
 
+    //constructor for the root album
     public Album(String albumName) {
         this.name = albumName;
         this.subAlbums = new ArrayList<>();
@@ -16,6 +16,7 @@ public class Album {
         this.parentAlbum = null;
     }
 
+    //constructor for albums that are not the root album
     public Album(String albumName, Album parentAlbum) {
         this.name = albumName;
         this.parentAlbum = parentAlbum;
