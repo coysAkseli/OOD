@@ -1,5 +1,5 @@
 import java.io.File;
-import java.util.ArrayList;
+
 
 //Ett objekt av den här klassen är en kontroller i princip
 public class MusicOrganizer {
@@ -32,7 +32,6 @@ public class MusicOrganizer {
         album.getSoundClips().add(file);
     }
 
-    // deletes sound clip from sub albums as well, NOT FROM PARENT ALBUMS
     // tar bort ljudfil från alla subalbum neråt i hierarkin, TAR INTE BORT FILEN FRÅN PARENT ALBUMS
     public void deleteSoundClip(Album album, File file) {
         album.getSoundClips().remove(file);
@@ -66,7 +65,7 @@ public class MusicOrganizer {
         for (File x : album.getSoundClips())
             System.out.println(x.getName());
     }
-
+    //getter för rootalbum
     public Album getRootAlbum() {
         return rootAlbum;
     }

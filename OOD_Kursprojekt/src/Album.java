@@ -23,7 +23,7 @@ public class Album {
         this.subAlbums = new ArrayList<>();
         this.soundClips = new ArrayList<>();
     }
-
+    //getters
     public ArrayList<Album> getSubAlbums() {
         return subAlbums;
     }
