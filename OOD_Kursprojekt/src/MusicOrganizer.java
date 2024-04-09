@@ -66,4 +66,8 @@ public class MusicOrganizer {
         for (File x : album.getSoundClips())
             System.out.println(x.getName());
     }
+
+    public Album getRootAlbum() {
+        return rootAlbum;
+    }
 }
