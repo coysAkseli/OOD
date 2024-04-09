@@ -23,7 +23,7 @@ public class MusicOrganizer {
     }
 
     //sound clip läggs först till albumet album, sedan till alla föräldraalbum uppåt i hierarkin inkl. rotalbum
-    public void addSoundClip(Album album, File file) {
+    public void addSoundClip(Album album, SoundClip file) {
 
         while (album.getParentAlbum() != null) {
             album.getSoundClips().add(file);
@@ -33,7 +33,7 @@ public class MusicOrganizer {
     }
 
     // tar bort ljudfil från alla subalbum neråt i hierarkin, TAR INTE BORT FILEN FRÅN PARENT ALBUMS
-    public void deleteSoundClip(Album album, File file) {
+    public void deleteSoundClip(Album album, SoundClip file) {
         album.getSoundClips().remove(file);
 
         for (Album x : album.getSubAlbums()) {
@@ -49,7 +49,7 @@ public class MusicOrganizer {
     }
 
     //kollar om en ljudfil fileToFind finns i albumet album
-    public boolean containsSoundClip(Album album, File fileToFind) {
+    public boolean containsSoundClip(Album album, SoundClip fileToFind) {
         return album.getSoundClips().contains(fileToFind);
     }
 
@@ -62,8 +62,8 @@ public class MusicOrganizer {
 
         System.out.println("-----------------");
 
-        for (File x : album.getSoundClips())
-            System.out.println(x.getName());
+        for (SoundClip x : album.getSoundClips())
+            System.out.println(x.toString());
     }
     //getter för rootalbum
     public Album getRootAlbum() {

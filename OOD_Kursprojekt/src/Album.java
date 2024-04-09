@@ -6,7 +6,7 @@ public class Album {
     private String name;
     private Album parentAlbum;
     private ArrayList<Album> subAlbums;
-    private ArrayList<File> soundClips;
+    private ArrayList<SoundClip> soundClips;
 
     //constructor for the root album
     public Album(String albumName) {
@@ -36,7 +36,7 @@ public class Album {
         return name;
     }
 
-    public ArrayList<File> getSoundClips() {
+    public ArrayList<SoundClip> getSoundClips() {
         return soundClips;
     }
 }

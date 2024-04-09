@@ -25,7 +25,7 @@ public class AlbumTest {
     public void testGetSoundClips() {
         Album album = new Album("Test Album");
         assertEquals(album.getSoundClips().size(), 0);
-        album.getSoundClips().add(new File("SoundClip"));
+        album.getSoundClips().add(new SoundClip(new File("SoundClip")));
         assertEquals(album.getSoundClips().size(), 1);
     }
 

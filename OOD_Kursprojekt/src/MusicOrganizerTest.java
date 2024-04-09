@@ -2,14 +2,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import java.io.File;
 
-public class MusicOrganizerTest {
+public class MusicOrganizerTest extends MusicOrganizer {
     @Test
     //Skaoar ett nytt subalbum och lägger till en ljudfil i det
     //Kollar att ljudfilen finns i subalbumet och i rootalbumet
     public void testAddSoundClip() {
         MusicOrganizer organizer = new MusicOrganizer();
         organizer.createNewSubAlbum("SubAlbum", organizer.getRootAlbum());
-        organizer.addSoundClip(organizer.getRootAlbum().getSubAlbums().get(0), new File("SoundClip"));
+        organizer.addSoundClip(organizer.getRootAlbum().getSubAlbums().get(0), new SoundClip(new File("SoundClip")));
         assertEquals(organizer.getRootAlbum().getSubAlbums().get(0).getSoundClips().size(), 1);
         assertEquals(organizer.getRootAlbum().getSoundClips().size(), 1); 
     }
@@ -20,7 +20,7 @@ public class MusicOrganizerTest {
     public void testContainsSoundClip() {
         MusicOrganizer organizer = new MusicOrganizer();
         organizer.createNewSubAlbum("SubAlbum", organizer.getRootAlbum());
-        File file = new File("SoundClip");
+        SoundClip file = new SoundClip(new File("SoundClip"));
         organizer.addSoundClip(organizer.getRootAlbum().getSubAlbums().get(0), file);
         assertEquals(organizer.containsSoundClip(organizer.getRootAlbum().getSubAlbums().get(0), file), true);
     }
@@ -55,8 +55,8 @@ public class MusicOrganizerTest {
         MusicOrganizer organizer = new MusicOrganizer();
         organizer.createNewSubAlbum("SubAlbum", organizer.getRootAlbum());
         organizer.createNewSubAlbum("SubSubAlbum", organizer.getRootAlbum().getSubAlbums().get(0));
-        File file = new File("SoundClip");
-        File file2 = new File("SoundClip2");
+        SoundClip file = new SoundClip(new File("SoundClip"));
+        SoundClip file2 = new SoundClip(new File("SoundClip2"));
         organizer.addSoundClip(organizer.getRootAlbum().getSubAlbums().get(0), file); //Lägger till ljudfil i SubAlbum
         organizer.addSoundClip(organizer.getRootAlbum().getSubAlbums().get(0).getSubAlbums().get(0), file2); //Lägger till ljudfil i SubSubAlbum
        // Tar bort filen från SubAlbum
@@ -86,7 +86,7 @@ public class MusicOrganizerTest {
         MusicOrganizer organizer = new MusicOrganizer();
         organizer.createNewSubAlbum("SubAlbum", organizer.getRootAlbum());
         organizer.createNewSubAlbum("SubSubAlbum", organizer.getRootAlbum().getSubAlbums().get(0));
-        File file = new File("SoundClip");
+        SoundClip file = new SoundClip(new File("SoundClip"));
         //Skapar 2 subalbum och lägger till en ljudfil i det första subalbumet
         organizer.addSoundClip(organizer.getRootAlbum().getSubAlbums().get(0), file);
         //Tar bort det första subalbumet som innehåller ljudfilen
