@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import model.Album;
+import model.MusicOrganizer;
 import model.SoundClip;
 import model.SoundClipBlockingQueue;
 import model.SoundClipLoader;
