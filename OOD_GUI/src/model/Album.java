@@ -1,31 +1,29 @@
 package model;
-import java.io.File;
-import java.util.ArrayList;
+
+
+import java.util.HashSet;
 
 public class Album {
-
     private String name;
     private Album parentAlbum;
-    private ArrayList<Album> subAlbums;
-    private ArrayList<SoundClip> soundClips;
+    private HashSet<Album> subAlbums;
+    private HashSet<SoundClip> soundClips;
 
-    //constructor for the root album
     public Album(String albumName) {
         this.name = albumName;
-        this.subAlbums = new ArrayList<>();
-        this.soundClips = new ArrayList<>();
+        this.subAlbums = new HashSet<>();
+        this.soundClips = new HashSet<>();
         this.parentAlbum = null;
     }
 
-    //constructor for albums that are not the root album
     public Album(String albumName, Album parentAlbum) {
         this.name = albumName;
         this.parentAlbum = parentAlbum;
-        this.subAlbums = new ArrayList<>();
-        this.soundClips = new ArrayList<>();
+        this.subAlbums = new HashSet<>();
+        this.soundClips = new HashSet<>();
     }
-    //getters
-    public ArrayList<Album> getSubAlbums() {
+
+    public HashSet<Album> getSubAlbums() {
         return subAlbums;
     }
 
@@ -37,7 +35,43 @@ public class Album {
         return name;
     }
 
-    public ArrayList<SoundClip> getSoundClips() {
+    public HashSet<SoundClip> getSoundClips() {
         return soundClips;
+    }
+
+    public void createNewSubAlbum(String newAlbumName) {
+        Album newAlbum = new Album(newAlbumName, this);
+        this.getSubAlbums().add(newAlbum);
+    }
+
+    public void deleteSubAlbum(Album subAlbum) {
+        this.getSubAlbums().remove(subAlbum);
+    }
+
+    public void addSoundClip(SoundClip file) {
+        Album album = this;
+        while (album.getParentAlbum() != null) {
+            album.getSoundClips().add(file);
+            album = album.getParentAlbum();
+        }
+        album.getSoundClips().add(file);
+    }
+
+    public void deleteSoundClip(SoundClip file) {
+        this.getSoundClips().remove(file);
+
+        for (Album x : this.getSubAlbums()) {
+            if (x.getSoundClips().contains(file)) {
+                x.deleteSoundClip(file);
+            }
+        }
+    }
+
+    public boolean containsSubAlbum(Album albumToFind) {
+        return this.getSubAlbums().contains(albumToFind);
+    }
+
+    public boolean containsSoundClip(SoundClip fileToFind) {
+        return this.getSoundClips().contains(fileToFind);
     }
 }

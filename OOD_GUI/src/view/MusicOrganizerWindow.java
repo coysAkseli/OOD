@@ -10,7 +10,6 @@ import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Album;
-import model.MusicOrganizer;
 import model.SoundClip;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;

@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import model.Album;
-import model.MusicOrganizer;
 import model.SoundClip;
 
 public class SoundClipListView extends ListView<SoundClip> {
