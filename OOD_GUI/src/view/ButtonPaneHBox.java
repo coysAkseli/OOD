@@ -60,7 +60,7 @@ public class ButtonPaneHBox extends HBox {
 			@Override
 			public void handle(ActionEvent arg0) {
 			
-				controller.addNewAlbum();
+				controller.addNewAlbum(null, null);
 			}
 			
 		});
@@ -76,7 +76,7 @@ public class ButtonPaneHBox extends HBox {
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				controller.deleteAlbum();
+				controller.deleteAlbum(null, null);
 			}
 			
 		});
@@ -92,7 +92,7 @@ public class ButtonPaneHBox extends HBox {
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				controller.addSoundClips();
+				controller.addSoundClips(null, null);
 			}
 			
 		});
@@ -108,7 +108,7 @@ public class ButtonPaneHBox extends HBox {
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				controller.removeSoundClips();
+				controller.removeSoundClips(null, null);
 			}
 			
 		});
