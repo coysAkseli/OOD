@@ -36,7 +36,9 @@ public class MusicOrganizerController {
 	 */
 	public Set<SoundClip> loadSoundClips(String path) {
 		Set<SoundClip> clips = SoundClipLoader.loadSoundClips(path);
-		// TODO: Add the loaded sound clips to the root album
+		for (SoundClip clip : clips) {
+			root.addSoundClip(clip);
+		}
 		
 
 		return clips;
@@ -56,34 +58,83 @@ public class MusicOrganizerController {
 	/**
 	 * Adds an album to the Music Organizer
 	 */
-	public void addNewAlbum(Album parentAlbum, String newAlbumName){ //TODO Update parameters if needed - e.g. you might want to give the currently selected album as parameter
+	public void addNewAlbum(){ //TODO Update parameters if needed - e.g. you might want to give the currently selected album as parameter
 		// TODO: Add your code here
-		parentAlbum.createNewSubAlbum(newAlbumName);
+		Album parentAlbum = view.getSelectedAlbum();
+		if (parentAlbum == null) {
+			view.displayMessage("Please select an album to add a new album to.");
+			return;
+		}
+		String albumName = view.promptForAlbumName();
+		if (albumName == null) {
+			view.displayMessage("Please enter a valid album name.");
+			return;
+		}
+		Album newAlbum = new Album(albumName, parentAlbum);
+		view.onAlbumAdded(newAlbum);
 		
 	}
 	
 	/**
 	 * Removes an album from the Music Organizer
 	 */
-	public void deleteAlbum(Album subAlbum,Album parenAlbum){ //TODO Update parameters if needed
+	public void deleteAlbum(){ //TODO Update parameters if needed
 		// TODO: Add your code here
-		parenAlbum.deleteSubAlbum(subAlbum);
+		Album album = view.getSelectedAlbum();
+		if (album == null) {
+			view.displayMessage("Please select an album to delete.");
+			return;
+		}
+		Album parentAlbum = album.getParentAlbum();
+		if (album == root) {
+			view.displayMessage("Cannot delete the root album.");
+			return;
+		}
+		parentAlbum.deleteSubAlbum(album);
+		view.onAlbumRemoved();
+		
 	}
 	
 	/**
 	 * Adds sound clips to an album
 	 */
-	public void addSoundClips(SoundClip clip, Album parentAlbum){ //TODO Update parameters if needed
+	public void addSoundClips(){ //TODO Update parameters if needed
 		// TODO: Add your code here
-		parentAlbum.addSoundClip(clip);
+		Album album = view.getSelectedAlbum();
+		if (album == null) {
+			view.displayMessage("Please select an album to add sound clips to.");
+			return;
+		}
+		List<SoundClip> clips = view.getSelectedSoundClips();
+		Album parentAlbum = album.getParentAlbum();
+
+		for (SoundClip clip : clips) {
+			album.addSoundClip(clip);
+		}
+
+		/*for (SoundClip clip : clips) {
+			parentAlbum.addSoundClip(clip);
+		}*/
+
+		view.onClipsUpdated();
+		
 	}
 	
 	/**
 	 * Removes sound clips from an album
 	 */
-	public void removeSoundClips(SoundClip clip, Album parentAlbum){ //TODO Update parameters if needed
+	public void removeSoundClips(){ //TODO Update parameters if needed
 		// TODO: Add your code here
-		parentAlbum.deleteSoundClip(clip);
+		Album album = view.getSelectedAlbum();
+		if (album == null) {
+			view.displayMessage("Please select an album to remove sound clips from.");
+			return;
+		}
+		List<SoundClip> clips = view.getSelectedSoundClips();
+		for (SoundClip clip : clips) {
+			album.deleteSoundClip(clip);
+		}
+		view.onClipsUpdated();
 		
 	}
 	

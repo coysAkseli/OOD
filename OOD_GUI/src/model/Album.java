@@ -19,6 +19,7 @@ public class Album {
     public Album(String albumName, Album parentAlbum) {
         this.name = albumName;
         this.parentAlbum = parentAlbum;
+        parentAlbum.getSubAlbums().add(this);
         this.subAlbums = new HashSet<>();
         this.soundClips = new HashSet<>();
     }
@@ -31,7 +32,7 @@ public class Album {
         return parentAlbum;
     }
 
-    public String getName() {
+    public String toString() {
         return name;
     }
 
@@ -39,29 +40,36 @@ public class Album {
         return soundClips;
     }
 
-    public void createNewSubAlbum(String newAlbumName) {
+    /*public void createNewSubAlbum(String newAlbumName) {
         Album newAlbum = new Album(newAlbumName, this);
-        this.getSubAlbums().add(newAlbum);
-    }
+        this.subAlbums.add(newAlbum);
+    }*/ //prolly not needed
 
     public void deleteSubAlbum(Album subAlbum) {
         this.getSubAlbums().remove(subAlbum);
     }
 
     public void addSoundClip(SoundClip file) {
-        Album album = this;
-        while (album.getParentAlbum() != null) {
+  
+        Album album = parentAlbum;
+        //while (album.getParentAlbum() != null) {
+        while (album != null) {
             album.getSoundClips().add(file);
+            //soundClips.add(file);
             album = album.getParentAlbum();
         }
-        album.getSoundClips().add(file);
+        //album.getSoundClips().add(file);
+        soundClips.add(file);
+
+
+        
     }
 
     public void deleteSoundClip(SoundClip file) {
         this.getSoundClips().remove(file);
 
-        for (Album x : this.getSubAlbums()) {
-            if (x.getSoundClips().contains(file)) {
+        for (Album x : this.subAlbums) {
+            if (x.containsSoundClip(file)) {
                 x.deleteSoundClip(file);
             }
         }
