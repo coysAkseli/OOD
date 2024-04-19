@@ -27,7 +27,7 @@ public class SoundClipListView extends ListView<SoundClip> {
 	 * Displays the contents of the specified album
 	 * @param album - the album which contents are to be displayed
 	 */
-	public void display(ADD_YOUR_ALBUM_TYPE album){
+	public void display(Album album){
 		this.getItems().clear();
 		
 		// TODO: 

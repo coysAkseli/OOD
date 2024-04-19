@@ -28,8 +28,8 @@ public class MusicOrganizerWindow extends Application {
 	
 	private BorderPane bord;
 	private static MusicOrganizerController controller;
-	private TreeItem<ADD_YOUR_ALBUM_TYPE> rootNode;
-	private TreeView<ADD_YOUR_ALBUM_TYPE> tree;
+	private TreeItem<Album> rootNode;
+	private TreeView<Album> tree;
 	private ButtonPaneHBox buttons;
 	private SoundClipListView soundClipTable;
 	private TextArea messages;
@@ -97,9 +97,9 @@ public class MusicOrganizerWindow extends Application {
 		
 	}
 	
-	private TreeView<ADD_YOUR_ALBUM_TYPE> createTreeView(){
+	private TreeView<Album> createTreeView(){
 		rootNode = new TreeItem<>(controller.getRootAlbum());
-		TreeView<ADD_YOUR_ALBUM_TYPE> v = new TreeView<>(rootNode);
+		TreeView<Album> v = new TreeView<>(rootNode);
 		
 		v.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -165,12 +165,12 @@ public class MusicOrganizerWindow extends Application {
 		messages.appendText(message + "\n");
 	}
 	
-	public ADD_YOUR_ALBUM_TYPE getSelectedAlbum() {
-		TreeItem<ADD_YOUR_ALBUM_TYPE> selectedItem = getSelectedTreeItem();
+	public Album getSelectedAlbum() {
+		TreeItem<Album> selectedItem = getSelectedTreeItem();
 		return selectedItem == null ? null : selectedItem.getValue();
 	}
 	
-	private TreeItem<ADD_YOUR_ALBUM_TYPE> getSelectedTreeItem(){
+	private TreeItem<Album> getSelectedTreeItem(){
 		return tree.getSelectionModel().getSelectedItem();
 	}
 	
@@ -215,9 +215,9 @@ public class MusicOrganizerWindow extends Application {
 	 * Updates the album hierarchy with a new album
 	 * @param newAlbum
 	 */
-	public void onAlbumAdded(ADD_YOUR_ALBUM_TYPE newAlbum){
-		TreeItem<ADD_YOUR_ALBUM_TYPE> parentItem = getSelectedTreeItem();
-		TreeItem<ADD_YOUR_ALBUM_TYPE> newItem = new TreeItem<>(newAlbum);
+	public void onAlbumAdded(Album newAlbum){
+		TreeItem<Album> parentItem = getSelectedTreeItem();
+		TreeItem<Album> newItem = new TreeItem<>(newAlbum);
 		parentItem.getChildren().add(newItem);
 		parentItem.setExpanded(true); // automatically expand the parent node in the tree
 	}
@@ -226,8 +226,8 @@ public class MusicOrganizerWindow extends Application {
 	 * Updates the album hierarchy by removing an album from it
 	 */
 	public void onAlbumRemoved(){
-		TreeItem<ADD_YOUR_ALBUM_TYPE> toRemove = getSelectedTreeItem(); 
-		TreeItem<ADD_YOUR_ALBUM_TYPE> parent = toRemove.getParent();
+		TreeItem<Album> toRemove = getSelectedTreeItem(); 
+		TreeItem<Album> parent = toRemove.getParent();
 		parent.getChildren().remove(toRemove);
 		
 	}
@@ -237,7 +237,7 @@ public class MusicOrganizerWindow extends Application {
 	 * been modified in an album
 	 */
 	public void onClipsUpdated(){
-		ADD_YOUR_ALBUM_TYPE a = getSelectedAlbum();
+		Album a = getSelectedAlbum();
 		soundClipTable.display(a);
 	}
 	
