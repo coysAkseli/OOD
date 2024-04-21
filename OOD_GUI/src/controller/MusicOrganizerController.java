@@ -19,7 +19,7 @@ public class MusicOrganizerController {
 	
 	public MusicOrganizerController() {
 
-		// TODO: Create the root album for all sound clips
+		// Create the root album for all sound clips
 		root = new Album("All Sound Clips");
 		
 		// Create the blocking queue
@@ -58,8 +58,7 @@ public class MusicOrganizerController {
 	/**
 	 * Adds an album to the Music Organizer
 	 */
-	public void addNewAlbum(){ //TODO Update parameters if needed - e.g. you might want to give the currently selected album as parameter
-		// TODO: Add your code here
+	public void addNewAlbum(){ 
 		Album parentAlbum = view.getSelectedAlbum();
 		if (parentAlbum == null) {
 			view.displayMessage("Please select an album to add a new album to.");
@@ -78,8 +77,7 @@ public class MusicOrganizerController {
 	/**
 	 * Removes an album from the Music Organizer
 	 */
-	public void deleteAlbum(){ //TODO Update parameters if needed
-		// TODO: Add your code here
+	public void deleteAlbum(){
 		Album album = view.getSelectedAlbum();
 		if (album == null) {
 			view.displayMessage("Please select an album to delete.");
@@ -98,8 +96,7 @@ public class MusicOrganizerController {
 	/**
 	 * Adds sound clips to an album
 	 */
-	public void addSoundClips(){ //TODO Update parameters if needed
-		// TODO: Add your code here
+	public void addSoundClips(){ 
 		Album album = view.getSelectedAlbum();
 		if (album == null) {
 			view.displayMessage("Please select an album to add sound clips to.");
@@ -123,8 +120,7 @@ public class MusicOrganizerController {
 	/**
 	 * Removes sound clips from an album
 	 */
-	public void removeSoundClips(){ //TODO Update parameters if needed
-		// TODO: Add your code here
+	public void removeSoundClips(){ 
 		Album album = view.getSelectedAlbum();
 		if (album == null) {
 			view.displayMessage("Please select an album to remove sound clips from.");
