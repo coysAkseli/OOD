@@ -18,6 +18,7 @@ public class ButtonPaneHBox extends HBox {
 	private Button addSoundClipsButton;
 	private Button removeSoundClipsButton;	
 	private Button playButton;
+	private Button newWindowButton;
 	public static final int BUTTON_MIN_WIDTH = 150;
 
 	
@@ -41,7 +42,9 @@ public class ButtonPaneHBox extends HBox {
 		
 		playButton = createPlaySoundClipsButton();
 		this.getChildren().add(playButton);
-		
+
+		newWindowButton = createNewWindowButton();
+		this.getChildren().add(newWindowButton);
 
 	}
 	
@@ -124,9 +127,24 @@ public class ButtonPaneHBox extends HBox {
 			@Override
 			public void handle(ActionEvent arg0) {
 				
-				controller.playSoundClips();
+				controller.playSoundClipsMusicOrganizerWindow();
 			}
 			
+		});
+		return button;
+	}
+
+	private Button createNewWindowButton() {
+		Button button = new Button("New Window");
+		button.setTooltip(new Tooltip("blablabla"));
+		button.setMinWidth(BUTTON_MIN_WIDTH);
+		button.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent actionEvent) {
+
+				controller.openAlbumContentsWindow(view.getSelectedAlbum());
+			}
 		});
 		return button;
 	}

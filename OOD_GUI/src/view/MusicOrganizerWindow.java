@@ -38,7 +38,7 @@ public class MusicOrganizerWindow extends Application {
 	public static void main(String[] args) {
 		controller = new MusicOrganizerController();
 		if (args.length == 0) {
-			controller.loadSoundClips("sample-sound");
+			controller.loadSoundClips("C:/jonkler/OOD/OOD_GUI/sample-sound");
 		} else if (args.length == 1) {
 			controller.loadSoundClips(args[0]);
 		} else {
@@ -56,7 +56,7 @@ public class MusicOrganizerWindow extends Application {
 			primaryStage.setTitle("Music Organizer");
 			
 			bord = new BorderPane();
-			
+
 			// Create buttons in the top of the GUI
 			buttons = new ButtonPaneHBox(controller, this);
 			bord.setTop(buttons);
@@ -73,7 +73,7 @@ public class MusicOrganizerWindow extends Application {
 			bord.setBottom(createBottomTextArea());
 			
 			Scene scene = new Scene(bord);
-			
+
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.sizeToScene();
@@ -100,6 +100,10 @@ public class MusicOrganizerWindow extends Application {
 	private TreeView<Album> createTreeView(){
 		rootNode = new TreeItem<>(controller.getRootAlbum());
 		TreeView<Album> v = new TreeView<>(rootNode);
+
+		//för att kunna öppna new window på flera album samtidit, implementerar
+		// om de orkas
+		//v.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		v.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -110,17 +114,20 @@ public class MusicOrganizerWindow extends Application {
 					Album selectedAlbum = getSelectedAlbum();
 					if(selectedAlbum != null) {
 						soundClipTable.display(selectedAlbum);
+						//controller.openAlbumContentsWindow(selectedAlbum);
 					}
-					
 				}
-				
 			}
-			
 		});
 
-		
 		return v;
 	}
+
+	/*private void openAlbumContentsWindow(Album album) {
+		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(controller, album);
+		//controller.registerView(contentsWindow);
+		contentsWindow.show();
+	}*/
 	
 	private SoundClipListView createSoundClipListView() {
 		SoundClipListView v = new SoundClipListView();
@@ -133,7 +140,7 @@ public class MusicOrganizerWindow extends Application {
 			public void handle(MouseEvent e) {
 				if(e.getClickCount() == 2) {
 					// This code gets invoked whenever the user double clicks in the sound clip table
-					controller.playSoundClips();
+					controller.playSoundClipsMusicOrganizerWindow();
 					
 				}
 				
@@ -232,16 +239,16 @@ public class MusicOrganizerWindow extends Application {
 		TreeItem<Album> toRemove = getSelectedTreeItem(); 
 		TreeItem<Album> parent = toRemove.getParent();
 		parent.getChildren().remove(toRemove);
-		
+
 	}
 	
 	/**
 	 * Refreshes the clipTable in response to the event that clips have
 	 * been modified in an album
 	 */
+
 	public void onClipsUpdated(){
 		Album a = getSelectedAlbum();
 		soundClipTable.display(a);
 	}
-	
 }

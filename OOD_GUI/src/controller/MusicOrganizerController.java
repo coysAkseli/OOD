@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,16 +10,19 @@ import model.SoundClip;
 import model.SoundClipBlockingQueue;
 import model.SoundClipLoader;
 import model.SoundClipPlayer;
+import view.AlbumContentsWindow;
 import view.MusicOrganizerWindow;
 
 public class MusicOrganizerController {
 
 	private MusicOrganizerWindow view;
+	private AlbumContentsWindow albumView;
 	private SoundClipBlockingQueue queue;
 	private Album root;
+
+
 	
 	public MusicOrganizerController() {
-
 		// Create the root album for all sound clips
 		root = new Album("All Sound Clips");
 		
@@ -47,6 +51,10 @@ public class MusicOrganizerController {
 	public void registerView(MusicOrganizerWindow view) {
 		this.view = view;
 	}
+
+	public void registerView(AlbumContentsWindow view) {
+		this.albumView = view;
+	}
 	
 	/**
 	 * Returns the root album
@@ -73,6 +81,12 @@ public class MusicOrganizerController {
 		view.onAlbumAdded(newAlbum);
 		
 	}
+
+	public void openAlbumContentsWindow(Album album) {
+		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(this, album);
+		//controller.registerView(contentsWindow);
+		contentsWindow.show();
+	}
 	
 	/**
 	 * Removes an album from the Music Organizer
@@ -96,6 +110,7 @@ public class MusicOrganizerController {
 	/**
 	 * Adds sound clips to an album
 	 */
+
 	public void addSoundClips(){ 
 		Album album = view.getSelectedAlbum();
 		if (album == null) {
@@ -140,11 +155,23 @@ public class MusicOrganizerController {
 	 * this method is called, the selected sound clips in the 
 	 * SoundClipTable are played.
 	 */
-	public void playSoundClips(){
+	public void playSoundClipsMusicOrganizerWindow(){
+
 		List<SoundClip> l = view.getSelectedSoundClips();
 		queue.enqueue(l);
 		for(int i=0;i<l.size();i++) {
 			view.displayMessage("Playing " + l.get(i));
 		}
 	}
+
+	public void playSoundClipsAlbumWindow(AlbumContentsWindow albumContentsWindow) {
+
+		albumView = albumContentsWindow;
+		List<SoundClip> l = albumView.getSelectedSoundClips();
+		queue.enqueue(l);
+		for(int i=0;i<l.size();i++) {
+			view.displayMessage("Playing " + l.get(i));
+		}
+	}
+
 }

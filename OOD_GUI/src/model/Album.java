@@ -8,6 +8,7 @@ public class Album {
     private Album parentAlbum;
     private HashSet<Album> subAlbums;
     private HashSet<SoundClip> soundClips;
+
     // Constructor for rootalbum
     public Album(String albumName) {
         this.name = albumName;
@@ -15,6 +16,7 @@ public class Album {
         this.soundClips = new HashSet<>();
         this.parentAlbum = null;
     }
+
     // Constructor for sub album
     public Album(String albumName, Album parentAlbum) {
         this.name = albumName;
@@ -50,6 +52,7 @@ public class Album {
     public void deleteSubAlbum(Album subAlbum) {
         this.getSubAlbums().remove(subAlbum);
     }
+
     // Add sound clip to the album
     public void addSoundClip(SoundClip file) {
   
@@ -61,7 +64,7 @@ public class Album {
         soundClips.add(file);
 
 
-        
+
     }
     // Delete sound clip from the album
     public void deleteSoundClip(SoundClip file) {
