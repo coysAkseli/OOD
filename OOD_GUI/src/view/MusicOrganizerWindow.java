@@ -157,7 +157,8 @@ public class MusicOrganizerWindow extends Application {
 		messages.setWrapText(true);
 		messages.prefWidthProperty().bind(bord.widthProperty());
 		messages.setEditable(false); // don't allow user to edit this area
-		
+		messages.setEditable(false); // don't allow user to edit this area
+
 		// Wrap the TextArea in a ScrollPane, so that the user can scroll the 
 		// text area up and down
 		ScrollPane sp = new ScrollPane(messages);
@@ -239,9 +240,8 @@ public class MusicOrganizerWindow extends Application {
 		TreeItem<Album> toRemove = getSelectedTreeItem(); 
 		TreeItem<Album> parent = toRemove.getParent();
 		parent.getChildren().remove(toRemove);
-
 	}
-	
+
 	/**
 	 * Refreshes the clipTable in response to the event that clips have
 	 * been modified in an album

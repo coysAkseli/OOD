@@ -68,4 +68,15 @@ public class AlbumContentsWindow extends Stage {
         return soundClipTable.getSelectedClips();
     }
 
+    public void closeWindow() {
+        this.close();
+    }
+
+    public Album getAlbum() {
+        return album;
+    }
+
+    public void onClipsUpdated() {
+        soundClipTable.display(album);
+    }
 }

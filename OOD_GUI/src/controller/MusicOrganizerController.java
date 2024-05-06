@@ -19,8 +19,7 @@ public class MusicOrganizerController {
 	private AlbumContentsWindow albumView;
 	private SoundClipBlockingQueue queue;
 	private Album root;
-
-
+	private HashSet<AlbumContentsWindow> openWindows;
 	
 	public MusicOrganizerController() {
 		// Create the root album for all sound clips
@@ -28,6 +27,8 @@ public class MusicOrganizerController {
 		
 		// Create the blocking queue
 		queue = new SoundClipBlockingQueue();
+
+		openWindows = new HashSet<AlbumContentsWindow>();
 				
 		// Create a separate thread for the sound clip player and start it
 		
@@ -84,6 +85,8 @@ public class MusicOrganizerController {
 
 	public void openAlbumContentsWindow(Album album) {
 		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(this, album);
+		openWindows.add(contentsWindow);
+
 		//controller.registerView(contentsWindow);
 		contentsWindow.show();
 	}
@@ -104,7 +107,21 @@ public class MusicOrganizerController {
 		}
 		parentAlbum.deleteSubAlbum(album);
 		view.onAlbumRemoved();
-		
+
+		closeWindowsAfterDeletion(album);
+	}
+
+	//closes windows for all deleted albums and subalbums
+	public void closeWindowsAfterDeletion(Album album) {
+
+		for (AlbumContentsWindow x : openWindows) {
+			if (x.getAlbum().equals(album)) {
+				x.closeWindow();
+				for (Album a : x.getAlbum().getSubAlbums()) {
+					closeWindowsAfterDeletion(a);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -124,11 +141,13 @@ public class MusicOrganizerController {
 			album.addSoundClip(clip);
 		}
 
-		/*for (SoundClip clip : clips) {
-			parentAlbum.addSoundClip(clip);
-		}*/
-
+		// in the MusicOrganizer window
 		view.onClipsUpdated();
+
+		// in the open windows
+		for (AlbumContentsWindow a : openWindows) {
+			a.onClipsUpdated();
+		}
 		
 	}
 	
@@ -145,8 +164,14 @@ public class MusicOrganizerController {
 		for (SoundClip clip : clips) {
 			album.deleteSoundClip(clip);
 		}
+
+		//in the MusicOrganizer window
 		view.onClipsUpdated();
-		
+
+		// in the open windows
+		for (AlbumContentsWindow a : openWindows) {
+			a.onClipsUpdated();
+		}
 	}
 	
 	/**
