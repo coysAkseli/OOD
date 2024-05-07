@@ -19,7 +19,7 @@ public class MusicOrganizerController {
 	private AlbumContentsWindow albumView;
 	private SoundClipBlockingQueue queue;
 	private Album root;
-	private HashSet<AlbumContentsWindow> openWindows;
+	private HashSet<AlbumContentsWindow> openWindows; //observers
 	
 	public MusicOrganizerController() {
 		// Create the root album for all sound clips
@@ -165,6 +165,7 @@ public class MusicOrganizerController {
 			album.deleteSoundClip(clip);
 		}
 
+
 		//in the MusicOrganizer window
 		view.onClipsUpdated();
 
@@ -189,6 +190,7 @@ public class MusicOrganizerController {
 		}
 	}
 
+	//spelar ljudfil i en annan window än musicorganizer
 	public void playSoundClipsAlbumWindow(AlbumContentsWindow albumContentsWindow) {
 
 		albumView = albumContentsWindow;

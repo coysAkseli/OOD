@@ -27,6 +27,7 @@ public class AlbumContentsWindow extends Stage {
     private final Album album;
     private final AlbumContentsWindow albumContentsWindow;
 
+    //constructor
     public AlbumContentsWindow(MusicOrganizerController controller, Album album) {
 
         this.controller = controller;
@@ -38,6 +39,7 @@ public class AlbumContentsWindow extends Stage {
         this.show();
     }
 
+    //skapar vyn med ljudfilerna i det nya fönstret
     private SoundClipListView createSoundClipListView() {
         SoundClipListView v = new SoundClipListView();
         v.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -64,18 +66,23 @@ public class AlbumContentsWindow extends Stage {
         return v;
     }
 
+    // getter för ljudfilen man har tryckt på
     public List<SoundClip> getSelectedSoundClips() {
         return soundClipTable.getSelectedClips();
     }
 
+    //stänger fönstret
     public void closeWindow() {
         this.close();
     }
 
+    //getter för album
     public Album getAlbum() {
         return album;
     }
 
+    // då ljudfilen har förändrat anropas dethär, det uppdaterar alla
+    // öppnade fönster som kan tänkas som prenumererare i Observer pattern
     public void onClipsUpdated() {
         soundClipTable.display(album);
     }

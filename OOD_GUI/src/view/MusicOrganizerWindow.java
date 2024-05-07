@@ -96,14 +96,11 @@ public class MusicOrganizerWindow extends Application {
 		}
 		
 	}
-	
+
+	//skapar strukturen för albumen i guin
 	private TreeView<Album> createTreeView(){
 		rootNode = new TreeItem<>(controller.getRootAlbum());
 		TreeView<Album> v = new TreeView<>(rootNode);
-
-		//för att kunna öppna new window på flera album samtidit, implementerar
-		// om de orkas
-		//v.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		
 		v.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -128,7 +125,8 @@ public class MusicOrganizerWindow extends Application {
 		//controller.registerView(contentsWindow);
 		contentsWindow.show();
 	}*/
-	
+
+	// skapar vyn för ljudfilerna
 	private SoundClipListView createSoundClipListView() {
 		SoundClipListView v = new SoundClipListView();
 		v.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -150,7 +148,8 @@ public class MusicOrganizerWindow extends Application {
 		
 		return v;
 	}
-	
+
+	//skapar textfältet nere i mujsicorganizer
 	private ScrollPane createBottomTextArea() {
 		messages = new TextArea();
 		messages.setPrefRowCount(3);
@@ -180,7 +179,7 @@ public class MusicOrganizerWindow extends Application {
 		TreeItem<Album> selectedItem = getSelectedTreeItem();
 		return selectedItem == null ? null : selectedItem.getValue();
 	}
-	
+
 	private TreeItem<Album> getSelectedTreeItem(){
 		return tree.getSelectionModel().getSelectedItem();
 	}
@@ -193,11 +192,12 @@ public class MusicOrganizerWindow extends Application {
 	 */
 	public String promptForAlbumName() {
 		TextInputDialog dialog = new TextInputDialog();
-		
+
 		dialog.setTitle("Enter album name");
 		dialog.setHeaderText(null);
 		dialog.setContentText("Please enter the name for the album");
 		Optional<String> result = dialog.showAndWait();
+
 		if(result.isPresent()) {
 			return result.get();
 		} else {
