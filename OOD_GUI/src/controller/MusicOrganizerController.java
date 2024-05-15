@@ -1,25 +1,24 @@
 package controller;
 
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import model.Album;
-import model.SoundClip;
-import model.SoundClipBlockingQueue;
-import model.SoundClipLoader;
-import model.SoundClipPlayer;
+import model.*;
 import view.AlbumContentsWindow;
 import view.MusicOrganizerWindow;
+import view.Observer;
 
-public class MusicOrganizerController {
+public class MusicOrganizerController implements Subject {
 
 	private MusicOrganizerWindow view;
 	private AlbumContentsWindow albumView;
 	private SoundClipBlockingQueue queue;
 	private Album root;
-	private HashSet<AlbumContentsWindow> openWindows; //observers
+	private ArrayList<Observer> observers;
 	
 	public MusicOrganizerController() {
 		// Create the root album for all sound clips
@@ -28,8 +27,9 @@ public class MusicOrganizerController {
 		// Create the blocking queue
 		queue = new SoundClipBlockingQueue();
 
-		openWindows = new HashSet<AlbumContentsWindow>();
-				
+		//innehåller alla öppna fönster förutom det upsprungliga MusicOrganizerWidnow
+		observers = new ArrayList<Observer>();
+
 		// Create a separate thread for the sound clip player and start it
 		
 		(new Thread(new SoundClipPlayer(queue))).start();
@@ -85,12 +85,12 @@ public class MusicOrganizerController {
 
 	public void openAlbumContentsWindow(Album album) {
 		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(this, album);
-		openWindows.add(contentsWindow);
+		observers.add(contentsWindow);
 
 		//controller.registerView(contentsWindow);
 		contentsWindow.show();
 	}
-	
+
 	/**
 	 * Removes an album from the Music Organizer
 	 */
@@ -108,22 +108,36 @@ public class MusicOrganizerController {
 		parentAlbum.deleteSubAlbum(album);
 		view.onAlbumRemoved();
 
-		closeWindowsAfterDeletion(album);
+		/**
+		 * Måddes skapa en arraylist som sparar alla fönster som
+		 * ska stängas.
+		 * fungerar inte om man under iterationen
+		 * samtidigt stänger fönstren eftersom HashSeten observers
+		 * ändras efter varje rekursion och stängt fönster
+		 */
+
+		ArrayList<Observer> albumWindowsToClose = new ArrayList<>();
+		closeWindowsAfterDeletion(album, albumWindowsToClose);
+
+		// Här stängs fönstren.
+		for (Observer window : albumWindowsToClose) {
+			window.closeWindow();
+		}
 	}
 
 	//closes windows for all deleted albums and subalbums
-	public void closeWindowsAfterDeletion(Album album) {
+	public void closeWindowsAfterDeletion(Album album, ArrayList<Observer> albumWindowsToClose) {
 
-		for (AlbumContentsWindow x : openWindows) {
-			if (x.getAlbum().equals(album)) {
-				x.closeWindow();
-				for (Album a : x.getAlbum().getSubAlbums()) {
-					closeWindowsAfterDeletion(a);
+		for (Observer o : observers) {
+			if (o.getAlbum().equals(album)) {
+				albumWindowsToClose.add(o);
+				for (Album a : o.getAlbum().getSubAlbums()) {
+					closeWindowsAfterDeletion(a, albumWindowsToClose);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds sound clips to an album
 	 */
@@ -144,11 +158,7 @@ public class MusicOrganizerController {
 		// in the MusicOrganizer window
 		view.onClipsUpdated();
 
-		// in the open windows
-		for (AlbumContentsWindow a : openWindows) {
-			a.onClipsUpdated();
-		}
-		
+		albumViewChanged();
 	}
 	
 	/**
@@ -165,14 +175,11 @@ public class MusicOrganizerController {
 			album.deleteSoundClip(clip);
 		}
 
-
 		//in the MusicOrganizer window
 		view.onClipsUpdated();
 
-		// in the open windows
-		for (AlbumContentsWindow a : openWindows) {
-			a.onClipsUpdated();
-		}
+		//soundclip has been removed, therefore album view changed
+		albumViewChanged();
 	}
 	
 	/**
@@ -191,9 +198,9 @@ public class MusicOrganizerController {
 	}
 
 	//spelar ljudfil i en annan window än musicorganizer
-	public void playSoundClipsAlbumWindow(AlbumContentsWindow albumContentsWindow) {
+	public void playSoundClipsAlbumWindow(Observer o) {
 
-		albumView = albumContentsWindow;
+		albumView = (AlbumContentsWindow) o;
 		List<SoundClip> l = albumView.getSelectedSoundClips();
 		queue.enqueue(l);
 		for(int i=0;i<l.size();i++) {
@@ -201,4 +208,24 @@ public class MusicOrganizerController {
 		}
 	}
 
+	@Override
+	public void registerObserver(Observer o) {
+		observers.add(o);
+	}
+
+	@Override
+	public void removeObserver(Observer o) {
+		observers.remove(o);
+	}
+
+	@Override
+	public void notifyObservers() {
+		for (Observer o : observers) {
+			o.update();
+		}
+	}
+
+	public void albumViewChanged() {
+		this.notifyObservers();
+	}
 }

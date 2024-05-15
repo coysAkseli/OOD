@@ -1,6 +1,9 @@
 package model;
 
 
+import view.Observer;
+
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Album {
@@ -9,12 +12,15 @@ public class Album {
     private HashSet<Album> subAlbums;
     private HashSet<SoundClip> soundClips;
 
+    //private ArrayList<Observer> observers;
+
     // Constructor for rootalbum
     public Album(String albumName) {
         this.name = albumName;
         this.subAlbums = new HashSet<>();
         this.soundClips = new HashSet<>();
         this.parentAlbum = null;
+        //this.observers = new ArrayList<Observer>();
     }
 
     // Constructor for sub album
@@ -22,9 +28,27 @@ public class Album {
         this.name = albumName;
         this.parentAlbum = parentAlbum;
         parentAlbum.getSubAlbums().add(this);
-        this.subAlbums = new HashSet<>();
+        this.subAlbums = new HashSet<Album>();
         this.soundClips = new HashSet<>();
+        //this.observers = new ArrayList<Observer>();
     }
+
+    // trodde album skulle vara Subjet, kändes mera
+    // passligt att det var MusicOrganizerController
+    /*
+    public void registerObserver(Observer o) {
+        observers.add(o);
+    }
+
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    public void notifyObservers() {
+        for (Observer o : observers) {
+            o.update(subAlbums, soundClips);
+        }
+    }*/
 
     // Getters
     public HashSet<Album> getSubAlbums() {
@@ -62,10 +86,8 @@ public class Album {
             album = album.getParentAlbum();
         }
         soundClips.add(file);
-
-
-
     }
+
     // Delete sound clip from the album
     public void deleteSoundClip(SoundClip file) {
         this.getSoundClips().remove(file);

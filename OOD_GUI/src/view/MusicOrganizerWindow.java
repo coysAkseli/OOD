@@ -33,6 +33,7 @@ public class MusicOrganizerWindow extends Application {
 	private ButtonPaneHBox buttons;
 	private SoundClipListView soundClipTable;
 	private TextArea messages;
+	//private Subject album;
 	
 	
 	public static void main(String[] args) {

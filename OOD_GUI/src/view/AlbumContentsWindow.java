@@ -1,5 +1,6 @@
 package view;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,33 +18,40 @@ import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import model.Subject;
 
 
-public class AlbumContentsWindow extends Stage {
+public class AlbumContentsWindow extends Stage implements Observer {
 
     private BorderPane bord;
     private SoundClipListView soundClipTable;
-    private final MusicOrganizerController controller;
-    private final Album album;
+    private Subject controller;
+    private Album album;
+
     private final AlbumContentsWindow albumContentsWindow;
 
     //constructor
-    public AlbumContentsWindow(MusicOrganizerController controller, Album album) {
+    public AlbumContentsWindow(Subject controller, Album album) {
 
         this.controller = controller;
         this.album = album;
         soundClipTable = createSoundClipListView();
         albumContentsWindow = this;
+        this.controller.registerObserver(this);
 
         setTitle(album.toString());
         this.show();
+    }
+
+    public void update() {
+        onClipsUpdated();
     }
 
     //skapar vyn med ljudfilerna i det nya fönstret
     private SoundClipListView createSoundClipListView() {
         SoundClipListView v = new SoundClipListView();
         v.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        v.display(album);
+        v.display((Album) album);
 
         VBox root = new VBox(v);
 
@@ -71,8 +79,9 @@ public class AlbumContentsWindow extends Stage {
         return soundClipTable.getSelectedClips();
     }
 
-    //stänger fönstret
+    //stänger fönstret och tar bort det som observer
     public void closeWindow() {
+        controller.removeObserver(this);
         this.close();
     }
 
@@ -81,8 +90,9 @@ public class AlbumContentsWindow extends Stage {
         return album;
     }
 
-    // då ljudfilen har förändrat anropas dethär, det uppdaterar alla
-    // öppnade fönster som kan tänkas som prenumererare i Observer pattern
+    /**
+     *     uppdaterar vyn för albumfönstret som är uppe
+     */
     public void onClipsUpdated() {
         soundClipTable.display(album);
     }
