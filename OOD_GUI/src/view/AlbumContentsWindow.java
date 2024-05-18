@@ -1,24 +1,17 @@
 package view;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
-import controller.MusicOrganizerController;
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Album;
 import model.SoundClip;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import model.Subject;
+import controller.Subject;
 
 
 public class AlbumContentsWindow extends Stage implements Observer {

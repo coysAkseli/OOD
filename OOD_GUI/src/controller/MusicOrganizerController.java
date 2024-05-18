@@ -1,9 +1,6 @@
 package controller;
 
-import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -79,7 +76,7 @@ public class MusicOrganizerController implements Subject {
 			return;
 		}
 		Album newAlbum = new Album(albumName, parentAlbum);
-		view.onAlbumAdded(newAlbum);
+		view.onAlbumAdded(parentAlbum, newAlbum);
 		
 	}
 
@@ -106,7 +103,7 @@ public class MusicOrganizerController implements Subject {
 			return;
 		}
 		parentAlbum.deleteSubAlbum(album);
-		view.onAlbumRemoved();
+		view.onAlbumRemoved(album);
 
 		/**
 		 * Måddes skapa en arraylist som sparar alla fönster som

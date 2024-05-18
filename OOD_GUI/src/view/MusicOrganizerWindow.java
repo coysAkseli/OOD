@@ -1,5 +1,6 @@
 package view;
 	
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,30 +8,28 @@ import controller.MusicOrganizerController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Album;
 import model.SoundClip;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
 
 
-public class MusicOrganizerWindow extends Application {
+public class MusicOrganizerWindow extends Application implements Serializable {
 	
 	private BorderPane bord;
 	private static MusicOrganizerController controller;
 	private TreeItem<Album> rootNode;
 	private TreeView<Album> tree;
 	private ButtonPaneHBox buttons;
+	private MainMenu menuBar;
 	private SoundClipListView soundClipTable;
 	private TextArea messages;
 	//private Subject album;
@@ -72,8 +71,14 @@ public class MusicOrganizerWindow extends Application {
 						
 			// Create the text area in the bottom of the GUI
 			bord.setBottom(createBottomTextArea());
-			
-			Scene scene = new Scene(bord);
+
+			menuBar = new MainMenu(controller, this);
+
+			BorderPane root = new BorderPane();
+			root.setTop(menuBar);
+			root.setCenter(bord);
+
+			Scene scene = new Scene(root);
 
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
@@ -227,9 +232,13 @@ public class MusicOrganizerWindow extends Application {
 	 * Updates the album hierarchy with a new album
 	 * @param newAlbum
 	 */
-	public void onAlbumAdded(Album newAlbum){
+
+	// gammalt
+
+	/*public void onAlbumAdded(Album newAlbum){
 		TreeItem<Album> parentItem = getSelectedTreeItem();
 		TreeItem<Album> newItem = new TreeItem<>(newAlbum);
+
 		parentItem.getChildren().add(newItem);
 		parentItem.setExpanded(true); // automatically expand the parent node in the tree
 	}
@@ -237,10 +246,45 @@ public class MusicOrganizerWindow extends Application {
 	/**
 	 * Updates the album hierarchy by removing an album from it
 	 */
-	public void onAlbumRemoved(){
+	/*public void onAlbumRemoved(){
 		TreeItem<Album> toRemove = getSelectedTreeItem(); 
 		TreeItem<Album> parent = toRemove.getParent();
 		parent.getChildren().remove(toRemove);
+	}*/
+
+	public void onAlbumAdded(Album parent, Album newAlbum){
+
+		TreeItem<Album> root = tree.getRoot();
+		TreeItem<Album> parentNode = findAlbumNode(parent, root);
+
+		parentNode.getChildren().add(new TreeItem<>(newAlbum));
+		parentNode.setExpanded(true); // automatically expand the parent node in the tree
+	}
+
+	public void onAlbumRemoved(Album toRemove){
+
+		TreeItem<Album> root = tree.getRoot();
+
+		TreeItem<Album> nodeToRemove = findAlbumNode(toRemove, root);
+		nodeToRemove.getParent().getChildren().remove(nodeToRemove);
+
+	}
+
+	private TreeItem<Album> findAlbumNode(Album albumToFind, TreeItem<Album> root) {
+
+		// recursive method to locate a node that contains a specific album in the TreeView
+
+		if(root.getValue().equals(albumToFind)) {
+			return root;
+		}
+
+		for(TreeItem<Album> node : root.getChildren()) {
+			TreeItem<Album> item = findAlbumNode(albumToFind, node);
+			if(item != null)
+				return item;
+		}
+
+		return null;
 	}
 
 	/**
