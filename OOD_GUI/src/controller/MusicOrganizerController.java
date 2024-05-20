@@ -17,9 +17,9 @@ public class MusicOrganizerController implements Subject {
 	private Album root;
 	private ArrayList<Observer> observers;
 	
-	public MusicOrganizerController() {
+	public MusicOrganizerController(int dummie) {
 		// Create the root album for all sound clips
-		root = new Album("All Sound Clips");
+		if (dummie == 0) root = new Album("All Sound Clips");
 		
 		// Create the blocking queue
 		queue = new SoundClipBlockingQueue();
@@ -60,6 +60,10 @@ public class MusicOrganizerController implements Subject {
 	public Album getRootAlbum(){
 		return root;
 	}
+
+	public void setRootAlbum(Album album) {
+		this.root = album;
+	}
 	
 	/**
 	 * Adds an album to the Music Organizer
@@ -82,7 +86,8 @@ public class MusicOrganizerController implements Subject {
 
 	public void openAlbumContentsWindow(Album album) {
 		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(this, album);
-		observers.add(contentsWindow);
+		//observers.add(contentsWindow);
+		registerObserver(contentsWindow);
 
 		//controller.registerView(contentsWindow);
 		contentsWindow.show();
@@ -108,13 +113,13 @@ public class MusicOrganizerController implements Subject {
 		/**
 		 * Måddes skapa en arraylist som sparar alla fönster som
 		 * ska stängas.
-		 * fungerar inte om man under iterationen
-		 * samtidigt stänger fönstren eftersom HashSeten observers
+		 * fungerar inte om man under rekursionen
+		 * stänger fönstren eftersom HashSeten observers
 		 * ändras efter varje rekursion och stängt fönster
 		 */
 
 		ArrayList<Observer> albumWindowsToClose = new ArrayList<>();
-		closeWindowsAfterDeletion(album, albumWindowsToClose);
+		flagWindowForClosure(album, albumWindowsToClose);
 
 		// Här stängs fönstren.
 		for (Observer window : albumWindowsToClose) {
@@ -122,14 +127,14 @@ public class MusicOrganizerController implements Subject {
 		}
 	}
 
-	//closes windows for all deleted albums and subalbums
-	public void closeWindowsAfterDeletion(Album album, ArrayList<Observer> albumWindowsToClose) {
+	//detects windows that need to be closed
+	public void flagWindowForClosure(Album album, ArrayList<Observer> albumWindowsToClose) {
 
 		for (Observer o : observers) {
 			if (o.getAlbum().equals(album)) {
 				albumWindowsToClose.add(o);
 				for (Album a : o.getAlbum().getSubAlbums()) {
-					closeWindowsAfterDeletion(a, albumWindowsToClose);
+					flagWindowForClosure(a, albumWindowsToClose);
 				}
 			}
 		}

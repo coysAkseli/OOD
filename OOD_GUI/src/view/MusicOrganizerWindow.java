@@ -1,16 +1,14 @@
 package view;
 	
 import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+import com.sun.source.tree.Tree;
 import controller.MusicOrganizerController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Album;
@@ -24,19 +22,19 @@ import javafx.scene.layout.BorderPane;
 
 public class MusicOrganizerWindow extends Application implements Serializable {
 	
-	private BorderPane bord;
+	private transient BorderPane bord;
+	private transient BorderPane root;
 	private static MusicOrganizerController controller;
-	private TreeItem<Album> rootNode;
-	private TreeView<Album> tree;
-	private ButtonPaneHBox buttons;
-	private MainMenu menuBar;
-	private SoundClipListView soundClipTable;
-	private TextArea messages;
+	private transient TreeItem<Album> rootNode;
+	private transient TreeView<Album> tree;
+	private transient ButtonPaneHBox buttons;
+	private transient MainMenu menuBar;
+	private transient SoundClipListView soundClipTable;
+	private transient TextArea messages;
 	//private Subject album;
 	
-	
 	public static void main(String[] args) {
-		controller = new MusicOrganizerController();
+		controller = new MusicOrganizerController(0);
 		if (args.length == 0) {
 			controller.loadSoundClips("C:/jonkler/OOD/OOD_GUI/sample-sound");
 		} else if (args.length == 1) {
@@ -50,7 +48,8 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 	
 	@Override
 	public void start(Stage primaryStage) {
-				
+
+
 		try {
 			controller.registerView(this);
 			primaryStage.setTitle("Music Organizer");
@@ -72,9 +71,9 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 			// Create the text area in the bottom of the GUI
 			bord.setBottom(createBottomTextArea());
 
-			menuBar = new MainMenu(controller, this);
+			menuBar = new MainMenu(controller, this, controller.getRootAlbum());
 
-			BorderPane root = new BorderPane();
+			root = new BorderPane();
 			root.setTop(menuBar);
 			root.setCenter(bord);
 
@@ -91,7 +90,6 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 					System.exit(0);
 					
 				}
-				
 			});
 
 			primaryStage.show();
@@ -126,11 +124,21 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 		return v;
 	}
 
-	/*private void openAlbumContentsWindow(Album album) {
-		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(controller, album);
-		//controller.registerView(contentsWindow);
-		contentsWindow.show();
-	}*/
+	public void updateTreeView(Album newRoot) {
+		rootNode = new TreeItem<>(newRoot);
+		tree.setRoot(rootNode);
+		updateTreeItems(rootNode);
+	}
+
+	public void updateTreeItems(TreeItem<Album> node) {
+		Album album = node.getValue();
+
+		for (Album subAlbum : album.getSubAlbums()) {
+			TreeItem<Album> childNode = new TreeItem<>(subAlbum);
+			node.getChildren().add(childNode);
+			updateTreeItems(childNode);
+		}
+	}
 
 	// skapar vyn för ljudfilerna
 	private SoundClipListView createSoundClipListView() {
@@ -145,11 +153,8 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 				if(e.getClickCount() == 2) {
 					// This code gets invoked whenever the user double clicks in the sound clip table
 					controller.playSoundClipsMusicOrganizerWindow();
-					
 				}
-				
 			}
-			
 		});
 		
 		return v;
@@ -233,25 +238,6 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 	 * @param newAlbum
 	 */
 
-	// gammalt
-
-	/*public void onAlbumAdded(Album newAlbum){
-		TreeItem<Album> parentItem = getSelectedTreeItem();
-		TreeItem<Album> newItem = new TreeItem<>(newAlbum);
-
-		parentItem.getChildren().add(newItem);
-		parentItem.setExpanded(true); // automatically expand the parent node in the tree
-	}
-	
-	/**
-	 * Updates the album hierarchy by removing an album from it
-	 */
-	/*public void onAlbumRemoved(){
-		TreeItem<Album> toRemove = getSelectedTreeItem(); 
-		TreeItem<Album> parent = toRemove.getParent();
-		parent.getChildren().remove(toRemove);
-	}*/
-
 	public void onAlbumAdded(Album parent, Album newAlbum){
 
 		TreeItem<Album> root = tree.getRoot();
@@ -293,7 +279,14 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 	 */
 
 	public void onClipsUpdated(){
-		Album a = getSelectedAlbum();
-		soundClipTable.display(a);
+		if (getSelectedAlbum() != null) {
+			Album a = getSelectedAlbum();
+			soundClipTable.display(a);
+		}
+		else soundClipTable.display(controller.getRootAlbum());
+	}
+
+	public TreeView<Album> getTree() {
+		return tree;
 	}
 }

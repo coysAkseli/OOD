@@ -1,17 +1,18 @@
 package model;
 
 
-import view.Observer;
+import javafx.stage.Stage;
+import view.MusicOrganizerWindow;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashSet;
 
-public class Album {
+public class Album implements Serializable {
     private String name;
     private Album parentAlbum;
     private HashSet<Album> subAlbums;
     private HashSet<SoundClip> soundClips;
-
+    private MusicOrganizerWindow view;
     //private ArrayList<Observer> observers;
 
     // Constructor for rootalbum
@@ -33,22 +34,13 @@ public class Album {
         //this.observers = new ArrayList<Observer>();
     }
 
-    // trodde album skulle vara Subjet, kändes mera
-    // passligt att det var MusicOrganizerController
-    /*
-    public void registerObserver(Observer o) {
-        observers.add(o);
+    public void setView(MusicOrganizerWindow view) {
+       this.view = view;
     }
 
-    public void removeObserver(Observer o) {
-        observers.remove(o);
+    public MusicOrganizerWindow getView() {
+        return view;
     }
-
-    public void notifyObservers() {
-        for (Observer o : observers) {
-            o.update(subAlbums, soundClips);
-        }
-    }*/
 
     // Getters
     public HashSet<Album> getSubAlbums() {
@@ -66,11 +58,6 @@ public class Album {
     public HashSet<SoundClip> getSoundClips() {
         return soundClips;
     }
-
-    /*public void createNewSubAlbum(String newAlbumName) {
-        Album newAlbum = new Album(newAlbumName, this);
-        this.subAlbums.add(newAlbum);
-    }*/ //This method is not used
 
     // Delete sub album from the album
     public void deleteSubAlbum(Album subAlbum) {
