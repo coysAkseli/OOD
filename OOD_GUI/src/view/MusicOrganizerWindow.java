@@ -71,7 +71,7 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 			// Create the text area in the bottom of the GUI
 			bord.setBottom(createBottomTextArea());
 
-			menuBar = new MainMenu(controller, this, controller.getRootAlbum());
+			menuBar = new MainMenu(controller, this);
 
 			root = new BorderPane();
 			root.setTop(menuBar);

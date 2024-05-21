@@ -22,13 +22,11 @@ public class MainMenu extends MenuBar {
     private MusicOrganizerWindow view;
     private Menu fileMenu;
     private MenuItem saveAs;
-    private Album root;
 
-    public MainMenu(MusicOrganizerController controller, MusicOrganizerWindow view, Album root) {
+    public MainMenu(MusicOrganizerController controller, MusicOrganizerWindow view) {
         super();
         this.controller = controller;
         this.view = view;
-        this.root = root;
 
         fileMenu = createFileMenu();
         this.getMenus().add(fileMenu);
@@ -46,10 +44,6 @@ public class MainMenu extends MenuBar {
         //creating menu items for sub item Save As
         MenuItem saveAsSerializedObject = new MenuItem("Serialized Object File");
         MenuItem saveAsHTML = new MenuItem("HTML File");
-
-        //adding sub items to Save As
-        //saveAs.getItems().addAll(saveAsSerializedObject, saveAsHTML);
-
 
         loadHierarchy.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -79,19 +73,6 @@ public class MainMenu extends MenuBar {
 
                     //controller.setRootAlbum(newRoot);
                     view.updateTreeView(newRoot);
-                    MusicOrganizerController newController = new MusicOrganizerController(1);
-
-                    for (Album a : controller.getRootAlbum().getSubAlbums()) {
-                        for (Album al : a.getSubAlbums()) {
-                            System.out.println(al.toString());
-                            for (Album alb : al.getSubAlbums()) {
-                                System.out.println(alb.toString());
-                                for (Album albu : alb.getSubAlbums()) {
-                                    System.out.println(albu.toString());
-                                }
-                            }
-                        }
-                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -105,7 +86,7 @@ public class MainMenu extends MenuBar {
 
                 System.out.println("Saving as...");
 
-                SaveContext saveContext = new SaveContext(view, controller);
+                SaveContext saveContext = new SaveContext(controller);
                 saveContext.saveAs();
             }
         });

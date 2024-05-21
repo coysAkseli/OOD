@@ -9,12 +9,10 @@ import view.MusicOrganizerWindow;
 import java.io.File;
 
 public class SaveContext {
-    private MusicOrganizerWindow toSave;
     private SaveStrategy strategy;
-    private MusicOrganizerController controller;
+    private final MusicOrganizerController controller;
 
-    public SaveContext(MusicOrganizerWindow toSave, MusicOrganizerController controller) {
-        this.toSave = toSave;
+    public SaveContext(MusicOrganizerController controller) {
         this.controller = controller;
     }
 
@@ -36,7 +34,7 @@ public class SaveContext {
 
         //snyggare med switch case kanske
         if (fileChooser.getSelectedExtensionFilter().equals(ex1)) {
-            setStrategy(new SaveStrategySerialize(toSave, controller.getRootAlbum()));
+            setStrategy(new SaveStrategySerialize(controller.getRootAlbum()));
         }
         else if (fileChooser.getSelectedExtensionFilter().equals(ex2)) {
             setStrategy((new SaveStrategyHTML(controller)));

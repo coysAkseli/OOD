@@ -1,9 +1,5 @@
 package model;
 
-
-import javafx.stage.Stage;
-import view.MusicOrganizerWindow;
-
 import java.io.Serializable;
 import java.util.HashSet;
 
@@ -12,8 +8,6 @@ public class Album implements Serializable {
     private Album parentAlbum;
     private HashSet<Album> subAlbums;
     private HashSet<SoundClip> soundClips;
-    private MusicOrganizerWindow view;
-    //private ArrayList<Observer> observers;
 
     // Constructor for rootalbum
     public Album(String albumName) {
@@ -32,14 +26,6 @@ public class Album implements Serializable {
         this.subAlbums = new HashSet<Album>();
         this.soundClips = new HashSet<>();
         //this.observers = new ArrayList<Observer>();
-    }
-
-    public void setView(MusicOrganizerWindow view) {
-       this.view = view;
-    }
-
-    public MusicOrganizerWindow getView() {
-        return view;
     }
 
     // Getters
