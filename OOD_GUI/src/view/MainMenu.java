@@ -23,6 +23,7 @@ public class MainMenu extends MenuBar {
     private Menu fileMenu;
     private MenuItem saveAs;
 
+    //constructor
     public MainMenu(MusicOrganizerController controller, MusicOrganizerWindow view) {
         super();
         this.controller = controller;
@@ -32,26 +33,26 @@ public class MainMenu extends MenuBar {
         this.getMenus().add(fileMenu);
     }
 
+    //skapar menyn
     private Menu createFileMenu() {
 
-        //creating menu
+        //skapar "File" menu
         fileMenu = new Menu("File");
 
-        //creating menu items
+        //skapar menu items
         MenuItem loadHierarchy = new MenuItem("Load Hierarchy");
         MenuItem saveAs = new MenuItem("Save as");
 
-        //creating menu items for sub item Save As
-        MenuItem saveAsSerializedObject = new MenuItem("Serialized Object File");
-        MenuItem saveAsHTML = new MenuItem("HTML File");
 
+        //då man trycker på Load Hierarchy
         loadHierarchy.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
 
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Load hierarchy");
-                fileChooser.setInitialDirectory(new File("C:/jonkler/OOD"));
+                //fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+                fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 
                 File selectedFile = fileChooser.showOpenDialog(null);
 
@@ -80,6 +81,7 @@ public class MainMenu extends MenuBar {
             }
         });
 
+        //då man trycker på save as
         saveAs.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

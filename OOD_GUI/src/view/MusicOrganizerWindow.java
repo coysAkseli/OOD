@@ -34,9 +34,9 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 	//private Subject album;
 	
 	public static void main(String[] args) {
-		controller = new MusicOrganizerController(0);
+		controller = new MusicOrganizerController();
 		if (args.length == 0) {
-			controller.loadSoundClips("C:/jonkler/OOD/OOD_GUI/sample-sound");
+			controller.loadSoundClips("sample-sound");
 		} else if (args.length == 1) {
 			controller.loadSoundClips(args[0]);
 		} else {
@@ -124,12 +124,20 @@ public class MusicOrganizerWindow extends Application implements Serializable {
 		return v;
 	}
 
+	/**
+	 *
+	 * uppdaterar tree view, behövs för load hierarchy
+	 */
 	public void updateTreeView(Album newRoot) {
 		rootNode = new TreeItem<>(newRoot);
 		tree.setRoot(rootNode);
 		updateTreeItems(rootNode);
 	}
 
+	/**
+	 *
+	 * uppdaterar Tree Items
+	 */
 	public void updateTreeItems(TreeItem<Album> node) {
 		Album album = node.getValue();
 

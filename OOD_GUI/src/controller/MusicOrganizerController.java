@@ -17,9 +17,9 @@ public class MusicOrganizerController implements Subject {
 	private Album root;
 	private ArrayList<Observer> observers;
 	
-	public MusicOrganizerController(int dummie) {
+	public MusicOrganizerController() {
 		// Create the root album for all sound clips
-		if (dummie == 0) root = new Album("All Sound Clips");
+		root = new Album("All Sound Clips");
 		
 		// Create the blocking queue
 		queue = new SoundClipBlockingQueue();
@@ -84,8 +84,9 @@ public class MusicOrganizerController implements Subject {
 		
 	}
 
+	//öppnar det nya fönstret
 	public void openAlbumContentsWindow(Album album) {
-		AlbumContentsWindow contentsWindow = new AlbumContentsWindow(this, album);
+		Observer contentsWindow = new AlbumContentsWindow(this, album);
 		//observers.add(contentsWindow);
 		registerObserver(contentsWindow);
 
@@ -115,7 +116,7 @@ public class MusicOrganizerController implements Subject {
 		 * ska stängas.
 		 * fungerar inte om man under rekursionen
 		 * stänger fönstren eftersom HashSeten observers
-		 * ändras efter varje rekursion och stängt fönster
+		 * ändras efter att man stänger ett fönster
 		 */
 
 		ArrayList<Observer> albumWindowsToClose = new ArrayList<>();
@@ -127,7 +128,7 @@ public class MusicOrganizerController implements Subject {
 		}
 	}
 
-	//detects windows that need to be closed
+	//bestämmer vilka fönster ska stängas
 	public void flagWindowForClosure(Album album, ArrayList<Observer> albumWindowsToClose) {
 
 		for (Observer o : observers) {
@@ -220,6 +221,7 @@ public class MusicOrganizerController implements Subject {
 		observers.remove(o);
 	}
 
+
 	@Override
 	public void notifyObservers() {
 		for (Observer o : observers) {
@@ -227,6 +229,9 @@ public class MusicOrganizerController implements Subject {
 		}
 	}
 
+	/**
+	 * albumvyn ändras då man lägger till eller tar bort ljudfiler
+	 */
 	public void albumViewChanged() {
 		this.notifyObservers();
 	}

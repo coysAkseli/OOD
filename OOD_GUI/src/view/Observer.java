@@ -10,4 +10,6 @@ public interface Observer {
     Album getAlbum();
 
     void closeWindow();
+
+    void show();
 }
